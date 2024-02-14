@@ -19,10 +19,22 @@ body {
 }
 
 ul,
-p {
+p,
+h1,
+h2,
+h3,
+h4,
+h5 {
   padding: 0;
   margin: 0;
   list-style: none;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  outline: none;
+  background: none;
 }
 
 .user-list {
@@ -67,9 +79,16 @@ p {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    border: 1px solid white;
     padding: 8px 10px;
     border-radius: 0.4rem;
+
+    &.active {
+      background: linear-gradient(
+        72.47deg,
+        rgb(115, 103, 240) 22.16%,
+        rgba(115, 103, 240, 0.7) 76.47%
+      ) !important;
+    }
   }
 
   .name {
@@ -118,6 +137,9 @@ p {
 .input {
   padding: 10px;
   margin-left: 20px;
+  border: none;
+  outline: none;
+  border-radius: 0.4rem;
 }
 .user-input {
   width: 150px;
@@ -147,7 +169,30 @@ p {
   float: right;
 }
 
-.login-btn {
-  padding: 15px;
-  margin-left: 20px;
+.navbar {
+  position: absolute;
+  top: 0;
+  left: 250px;
+  right: 0;
+  padding: 10px;
 }
+
+.nav {
+  color: white;
+  background-color: #283046;
+  border-radius: 0.4rem;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  h5 {
+    margin: 0;
+  }
+  button {
+    font-weight: 700;
+    color: white;
+  }
+}
+
+@import "./login";

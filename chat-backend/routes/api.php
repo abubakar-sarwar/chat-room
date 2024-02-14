@@ -25,10 +25,11 @@ Route::get('/users', [UsersController::class, 'index']);
 Route::post('/register', [UsersController::class, 'register']);
 Route::post('/login', [UsersController::class, 'login']);
 
-
 Route::group(['middleware' => ['auth:sanctum']], function() {
     Route::post('/messages', [ChatController::class, 'index']);
     Route::get('/messages/{id}', [ChatController::class, 'show']);
+
+    Route::post('/logout', [UsersController::class, 'logout']);
 });
 
 Broadcast::routes(['middleware' => ['auth:sanctum']]);

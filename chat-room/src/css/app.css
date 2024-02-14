@@ -18,10 +18,23 @@ body {
   -webkit-text-size-adjust: 100%;
 }
 
-ul, p {
+ul,
+p,
+h1,
+h2,
+h3,
+h4,
+h5 {
   padding: 0;
   margin: 0;
   list-style: none;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  outline: none;
+  background: none;
 }
 
 .user-list {
@@ -63,9 +76,11 @@ ul, p {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border: 1px solid white;
   padding: 8px 10px;
   border-radius: 0.4rem;
+}
+.user-list button.user-card.active {
+  background: linear-gradient(72.47deg, rgb(115, 103, 240) 22.16%, rgba(115, 103, 240, 0.7) 76.47%) !important;
 }
 .user-list .name {
   font-size: 13px;
@@ -117,6 +132,9 @@ ul, p {
 .input {
   padding: 10px;
   margin-left: 20px;
+  border: none;
+  outline: none;
+  border-radius: 0.4rem;
 }
 
 .user-input {
@@ -152,7 +170,80 @@ ul, p {
   float: right;
 }
 
-.login-btn {
-  padding: 15px;
-  margin-left: 20px;
+.navbar {
+  position: absolute;
+  top: 0;
+  left: 250px;
+  right: 0;
+  padding: 10px;
+}
+
+.nav {
+  color: white;
+  background-color: #283046;
+  border-radius: 0.4rem;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.nav h5 {
+  margin: 0;
+}
+.nav button {
+  font-weight: 700;
+  color: white;
+}
+
+.login {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+.login .log-bg {
+  background-color: white;
+  padding: 20px;
+  border-radius: 0.4rem;
+}
+.login .title {
+  margin-bottom: 15px;
+}
+.login .input-group {
+  margin-bottom: 10px;
+}
+.login .input-group label {
+  display: block;
+  font-size: 14px;
+  margin-bottom: 3px;
+}
+.login .input-group input {
+  margin: 0;
+  width: 250px;
+  border: 1px solid gray;
+}
+.login .input-group .relative {
+  position: relative;
+}
+.login .input-group .relative input {
+  padding-right: 35px;
+}
+.login .input-group .toggler {
+  position: absolute;
+  display: flex;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+.login .error {
+  font-size: 10px;
+  color: red;
+  margin-top: 3px;
+}
+.login .login-btn {
+  border-radius: 0.4rem;
+  padding: 10px 0;
+  width: 100%;
+  margin-top: 15px;
 }/*# sourceMappingURL=app.css.map */
