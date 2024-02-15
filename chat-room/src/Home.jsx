@@ -49,7 +49,9 @@ const Home = () => {
 
   useEffect(() => {
     jwt.get("/users").then((res) => {
-      if (res.status === 200) setData(res.data);
+      if (res.status === 200) {
+        setData(res.data);
+      }
     });
 
     if (user) {
@@ -60,18 +62,28 @@ const Home = () => {
           console.log("it Worked");
         })
         .listen(".chat", (event) => {
-          if (event.from_id === toUser)
+          if (event.from_id === toUser?.id) {
+            console.log(event);
             setMessages((oldArray) => [
               ...oldArray,
               { received: true, message: event.message },
             ]);
-          else console.log("Message from " + event.from_id);
+          } else {
+            setMessages((oldArray) => [
+              ...oldArray,
+              { received: false, message: event.message },
+            ]);
+          }
+
+          if (chatbody.current) {
+            chatbody.current.scrollTop = chatbody.current.scrollHeight;
+          }
         });
     }
   }, []);
 
   const getChat = (usr) => {
-    setToUser(usr.name);
+    setToUser(usr);
     jwt.get(`/messages/${usr.id}`).then((res) => {
       if (res.status === 200) {
         setMessages(res.data);
@@ -82,7 +94,7 @@ const Home = () => {
   const submit = (e) => {
     e.preventDefault();
 
-    jwt.post("/messages", { message: text, user: toUser }).then((res) => {
+    jwt.post("/messages", { message: text, user: toUser?.id }).then((res) => {
       if (res.status === 200)
         setMessages((oldArray) => [
           ...oldArray,
@@ -103,19 +115,18 @@ const Home = () => {
                 <li key={usr.id}>
                   <button
                     className={`user-card${
-                      toUser === usr?.name ? " active" : ""
+                      toUser?.name === usr?.name ? " active" : ""
                     }`}
                     onClick={() => getChat(usr)}
                   >
                     <div>
                       <div className="name">
                         <p>{usr.name}</p>
-                        <p>{"akjsdhkjas"}</p>
+                        <p>{"Last Message..."}</p>
                       </div>
                     </div>
-                    <div>
+                    <div className="date-user">
                       <span className="date">Jan 30</span>
-                      <span className="new-msg">2</span>
                     </div>
                   </button>
                 </li>
@@ -128,14 +139,12 @@ const Home = () => {
       </div>
       <div className="wrapper">
         <div className="chat-room">
-          <div className="title">{user?.name}</div>
           <div ref={chatbody} className="body">
             {messages.length > 0 ? (
               messages.map((msg, index) => (
                 <div className="chat" key={index}>
                   <div className="chat-body">
                     <div className={`chat-left${msg.received ? "" : " right"}`}>
-                      {/* <span className="sm">{msg.user.name}</span> */}
                       <span>{msg.message}</span>
                     </div>
                   </div>
@@ -149,13 +158,6 @@ const Home = () => {
           </div>
           <form onSubmit={submit}>
             <div className="action">
-              <input
-                placeholder="To user..."
-                type="text"
-                className="action-input user-input"
-                value={toUser}
-                onChange={(e) => setToUser(e.target.value)}
-              />
               <input
                 placeholder="Message..."
                 type="text"
