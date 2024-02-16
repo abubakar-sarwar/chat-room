@@ -44,8 +44,10 @@ const Home = () => {
   const [messages, setMessages] = useState([]);
   const [text, setText] = useState("");
   const [toUser, setToUser] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const chatbody = useRef(null);
+  const channelRef = useRef(null);
 
   useEffect(() => {
     jwt.get("/users").then((res) => {
@@ -56,6 +58,7 @@ const Home = () => {
 
     if (user) {
       const channel = window.Echo.private("private.chat." + user.id);
+      channelRef.current = channel; // Store channel reference
 
       channel
         .subscribed(() => {
@@ -63,24 +66,27 @@ const Home = () => {
         })
         .listen(".chat", (event) => {
           if (event.from_id === toUser?.id) {
-            console.log(event);
             setMessages((oldArray) => [
               ...oldArray,
               { received: true, message: event.message },
             ]);
-          } else {
-            setMessages((oldArray) => [
-              ...oldArray,
-              { received: false, message: event.message },
-            ]);
-          }
-
-          if (chatbody.current) {
-            chatbody.current.scrollTop = chatbody.current.scrollHeight;
           }
         });
     }
+
+    // Cleanup function to unsubscribe from channel when component unmounts
+    return () => {
+      if (channelRef.current) {
+        channelRef.current.unsubscribe();
+      }
+    };
   }, []);
+
+  useEffect(() => {
+    if (chatbody.current) {
+      chatbody.current.scrollTop = chatbody.current.scrollHeight;
+    }
+  }, [chatbody.current, messages]);
 
   const getChat = (usr) => {
     setToUser(usr);
@@ -93,6 +99,7 @@ const Home = () => {
 
   const submit = (e) => {
     e.preventDefault();
+    setLoading(true);
 
     jwt.post("/messages", { message: text, user: toUser?.id }).then((res) => {
       if (res.status === 200)
@@ -100,6 +107,7 @@ const Home = () => {
           ...oldArray,
           { received: false, message: text },
         ]);
+      setLoading(false);
     });
   };
 
@@ -166,7 +174,10 @@ const Home = () => {
                 onChange={(e) => setText(e.target.value)}
               />
               <button className="btn" type="submit">
-                Send
+                <span className={`${loading ? "btn-hide" : ""}`}>Send</span>
+                <div className={`btn-loader ${loading ? "" : "hide"}`}>
+                  <div className="loader"></div>
+                </div>
               </button>
             </div>
           </form>
