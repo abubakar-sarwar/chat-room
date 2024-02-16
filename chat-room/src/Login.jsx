@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { handleLogin } from "./Auth/authentication";
 import jwt from "./Auth/jwt";
 import { FiEye } from "react-icons/fi";
+import Register from "./Register";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -13,6 +14,7 @@ const Login = () => {
   });
   const [errors, setErrors] = useState({});
   const [visible, setVisible] = useState(false);
+  const [showRegister, setShowRegister] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -63,43 +65,54 @@ const Login = () => {
   return (
     <div className="login">
       <div className="log-bg">
-        <form onSubmit={Auth}>
-          <div className="title">
-            <h2>LOGIN</h2>
-          </div>
-          <div className="input-group">
-            <label htmlFor="email">Email</label>
-            <input
-              type="email"
-              className="input"
-              placeholder="Email here..."
-              value={fields.email}
-              name="email"
-              onChange={handleChange}
-            />
-            {errors?.email && <p className="error">{errors?.email}</p>}
-          </div>
-          <div className="input-group">
-            <label htmlFor="password">Password</label>
-            <div className="relative">
+        {showRegister ? (
+          <Register setShowRegister={setShowRegister} />
+        ) : (
+          <form onSubmit={Auth}>
+            <div className="title">
+              <h2>LOGIN</h2>
+            </div>
+            <div className="input-group">
+              <label htmlFor="email">Email</label>
               <input
-                type={visible ? "text" : "password"}
+                type="email"
                 className="input"
-                placeholder="........."
-                value={fields.password}
-                name="password"
+                placeholder="Email here..."
+                value={fields.email}
+                name="email"
                 onChange={handleChange}
               />
-              <span onClick={() => setVisible(!visible)} className="toggler">
-                <FiEye />
-              </span>
+              {errors?.email && <p className="error">{errors?.email}</p>}
             </div>
-            {errors?.password && <p className="error">{errors?.password}</p>}
-          </div>
-          <button type="submit" className="btn login-btn">
-            Login
-          </button>
-        </form>
+            <div className="input-group">
+              <label htmlFor="password">Password</label>
+              <div className="relative">
+                <input
+                  type={visible ? "text" : "password"}
+                  className="input"
+                  placeholder="........."
+                  value={fields.password}
+                  name="password"
+                  onChange={handleChange}
+                />
+                <span onClick={() => setVisible(!visible)} className="toggler">
+                  <FiEye />
+                </span>
+              </div>
+              {errors?.password && <p className="error">{errors?.password}</p>}
+            </div>
+            <p className="no-acc">
+              Don't have an account?
+              <br />
+              <span onClick={() => setShowRegister(true)}>
+                Create Account Here
+              </span>
+            </p>
+            <button type="submit" className="btn login-btn">
+              Login
+            </button>
+          </form>
+        )}
       </div>
     </div>
   );

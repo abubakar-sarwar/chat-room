@@ -49,12 +49,10 @@ class UsersController extends Controller
 
         $token = $user->createToken('myapptoken')->plainTextToken;
 
-        $response = [
-            'user' => $user,
-            'token' => $token
-        ];
+        $user['avatar'] = '/static/media/' . $user['avatar'];
+        $user['accessToken'] = $token;
 
-        return response($response, 201);
+        return response($user, 201);
     }
 
     public function login(Request $request) {

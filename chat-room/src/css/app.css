@@ -230,6 +230,9 @@ button {
   align-items: center;
   height: 100vh;
 }
+.login form {
+  max-width: 300px;
+}
 .login .log-bg {
   background-color: white;
   padding: 20px;
@@ -248,7 +251,7 @@ button {
 }
 .login .input-group input {
   margin: 0;
-  width: 250px;
+  width: 100%;
   border: 1px solid gray;
 }
 .login .input-group .relative {
@@ -276,6 +279,18 @@ button {
   width: 100%;
   margin-top: 15px;
 }
+.login .no-acc {
+  font-size: 11px;
+  text-align: center;
+}
+.login .no-acc span {
+  text-decoration: underline;
+  font-weight: 600;
+  cursor: pointer;
+}
+.login .no-acc span:hover {
+  color: #283046;
+}
 
 /* HTML: <div class="loader"></div> */
 .loader {
@@ -296,4 +311,12 @@ button {
   to {
     transform: rotate(1turn);
   }
+}
+.no-chat {
+  text-align: center;
+  font-size: 14px;
+  background-color: rgba(255, 0, 0, 0.5);
+  border-radius: 0.4rem;
+  padding: 10px 0;
+  margin-right: -20px;
 }/*# sourceMappingURL=app.css.map */

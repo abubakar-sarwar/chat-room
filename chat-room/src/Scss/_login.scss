@@ -4,6 +4,10 @@
   align-items: center;
   height: 100vh;
 
+  form {
+    max-width: 300px;
+  }
+
   .log-bg {
     background-color: white;
     padding: 20px;
@@ -24,7 +28,7 @@
     }
     input {
       margin: 0;
-      width: 250px;
+      width: 100%;
       border: 1px solid gray;
     }
 
@@ -57,5 +61,19 @@
     padding: 10px 0;
     width: 100%;
     margin-top: 15px;
+  }
+
+  .no-acc {
+    font-size: 11px;
+    text-align: center;
+
+    span {
+      text-decoration: underline;
+      font-weight: 600;
+      cursor: pointer;
+      &:hover {
+        color: #283046;
+      }
+    }
   }
 }

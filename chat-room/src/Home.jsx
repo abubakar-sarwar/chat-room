@@ -159,8 +159,8 @@ const Home = () => {
                 </div>
               ))
             ) : (
-              <div className="chat">
-                <div className="chat-left right">No Chat</div>
+              <div className="no-chat">
+                <p>No Chat</p>
               </div>
             )}
           </div>
