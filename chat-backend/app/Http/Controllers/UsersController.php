@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Models\User;
+use App\Models\Messages;
 
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
@@ -21,7 +22,23 @@ class UsersController extends Controller
      */
     public function index()
     {
-        return User::all();
+        $users = User::all();
+
+        // Loop through each user
+        foreach ($users as $user) {
+            // Retrieve the last message sent to or received from the user
+            $lastMessage = Messages::select('from_id', 'message', 'type', 'created_at')
+                ->where('from_id', $user->id)
+                ->orWhere('to_id', $user->id)
+                ->latest() // Get the latest message
+                ->first(); // Retrieve only the first result
+
+            // Add the last message to the user object
+            $user->lastMessage = $lastMessage;
+        }
+
+        // Return the users with the last message added
+        return $users;
     }
 
     public function register(Request $request) {

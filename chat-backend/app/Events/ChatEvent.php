@@ -14,7 +14,7 @@ class ChatEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    private string $message;
+    private $message;
     private $rec_id;
     private $from_id;
 
@@ -23,7 +23,7 @@ class ChatEvent implements ShouldBroadcast
      *
      * @return void
      */
-    public function __construct(string $message, $rec_id, $from_id)
+    public function __construct($message, $rec_id, $from_id)
     {
         $this->message = $message;
         $this->rec_id = $rec_id;
@@ -48,8 +48,7 @@ class ChatEvent implements ShouldBroadcast
     public function broadcastWith()
     {
         return [
-            'from_id' => $this->from_id,
-            'message' => $this->message
+            'message' => $this->message->only(['from_id', 'to_id', 'message', 'type', 'created_at'])
         ];
     }
 }

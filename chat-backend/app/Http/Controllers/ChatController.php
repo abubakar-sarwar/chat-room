@@ -25,8 +25,7 @@ class ChatController extends Controller
         $to_user = User::where('id', $request->user)->first();
 
         if($to_user) {
-            event(new ChatEvent($request->message, $to_user->id, auth('sanctum')->user()->id));
-
+            
             $message = Messages::create([
                 'from_id' => auth('sanctum')->user()->id, 
                 'to_id' => $to_user->id,
@@ -34,7 +33,9 @@ class ChatController extends Controller
                 'message' => $fields['message']
             ]);
 
-            return $request->message;
+            event(new ChatEvent($message, $to_user->id, auth('sanctum')->user()->id));
+
+            return $message;
         }
         else {
             return 'User not found';
@@ -58,15 +59,6 @@ class ChatController extends Controller
                             ->Where('to_id', '=', $user_id)
                             ->get();
 
-        $fMessages = [];
-        foreach($messages as $msg) {
-            $fMessages[] = [
-                'received' => $msg->to_id == $user_id ? true : false,
-                'message' => $msg->message,
-            ];
-
-        }
-
-        return $fMessages;
+        return $messages;
     }
 }

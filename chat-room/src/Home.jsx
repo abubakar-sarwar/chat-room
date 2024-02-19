@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import jwt from "./Auth/jwt";
 import Navbar from "./Navbar";
 
@@ -49,6 +49,27 @@ const Home = () => {
   const chatbody = useRef(null);
   const channelRef = useRef(null);
 
+  const addChat = (event) => {
+    console.log("Event:", event); // Log the entire event object
+    console.log("toUser.id:", toUser.id); // Log the value of toUser.id
+    console.log("event.from_id:", event.message.from_id);
+    if (event.from_id === toUser?.id) {
+      setMessages((oldArray) => [...oldArray, event.message]);
+    }
+  };
+
+  const [newMessage, setNewMessage] = useState({});
+
+  useEffect(() => {
+    setMessages((oldArray) => {
+      if (toUser?.id === newMessage?.from_id) {
+        return [...oldArray, newMessage];
+      } else {
+        return oldArray;
+      }
+    });
+  }, [newMessage]);
+
   useEffect(() => {
     jwt.get("/users").then((res) => {
       if (res.status === 200) {
@@ -65,12 +86,16 @@ const Home = () => {
           console.log("it Worked");
         })
         .listen(".chat", (event) => {
-          if (event.from_id === toUser?.id) {
-            setMessages((oldArray) => [
-              ...oldArray,
-              { received: true, message: event.message },
-            ]);
-          }
+          setNewMessage(event.message);
+          setData((prev) => {
+            return prev.map((item) => {
+              if (item.id === event.message.from_id) {
+                return { ...item, lastMessage: event.message };
+              } else {
+                return item;
+              }
+            });
+          });
         });
     }
 
@@ -102,13 +127,22 @@ const Home = () => {
     setLoading(true);
 
     jwt.post("/messages", { message: text, user: toUser?.id }).then((res) => {
-      if (res.status === 200)
+      if (res.status === 201)
         setMessages((oldArray) => [
           ...oldArray,
           { received: false, message: text },
         ]);
       setLoading(false);
     });
+  };
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    if (isNaN(date)) {
+      return "----";
+    }
+    const options = { month: "short", day: "numeric" };
+    return date.toLocaleDateString("en-US", options);
   };
 
   return (
@@ -123,18 +157,20 @@ const Home = () => {
                 <li key={usr.id}>
                   <button
                     className={`user-card${
-                      toUser?.name === usr?.name ? " active" : ""
+                      toUser?.id === usr?.id ? " active" : ""
                     }`}
                     onClick={() => getChat(usr)}
                   >
                     <div>
                       <div className="name">
                         <p>{usr.name}</p>
-                        <p>{"Last Message..."}</p>
+                        <p>{usr?.lastMessage?.message || "-------"}</p>
                       </div>
                     </div>
                     <div className="date-user">
-                      <span className="date">Jan 30</span>
+                      <span className="date">
+                        {formatDate(usr?.lastMessage?.created_at)}
+                      </span>
                     </div>
                   </button>
                 </li>
@@ -152,7 +188,11 @@ const Home = () => {
               messages.map((msg, index) => (
                 <div className="chat" key={index}>
                   <div className="chat-body">
-                    <div className={`chat-left${msg.received ? "" : " right"}`}>
+                    <div
+                      className={`chat-left${
+                        msg.to_id === user?.id ? "" : " right"
+                      }`}
+                    >
                       <span>{msg.message}</span>
                     </div>
                   </div>
