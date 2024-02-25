@@ -61,4 +61,5 @@ class ChatController extends Controller
 
         return $messages;
     }
+    
 }
