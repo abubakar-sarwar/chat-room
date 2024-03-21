@@ -24,20 +24,15 @@ class UsersController extends Controller
     {
         $users = User::all();
 
-        // Loop through each user
         foreach ($users as $user) {
-            // Retrieve the last message sent to or received from the user
             $lastMessage = Messages::select('from_id', 'message', 'type', 'created_at')
                 ->where('from_id', $user->id)
                 ->orWhere('to_id', $user->id)
-                ->latest() // Get the latest message
-                ->first(); // Retrieve only the first result
-
-            // Add the last message to the user object
+                ->latest()
+                ->first();
+            
             $user->lastMessage = $lastMessage;
         }
-
-        // Return the users with the last message added
         return $users;
     }
 
